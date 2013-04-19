@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -fPIC -g -c -Wall -Werror
+CFLAGS = -fPIC -std=c99 -Wall -Werror
 
 SRC = $(wildcard *.c)
 HDR = $(wildcard *.h)

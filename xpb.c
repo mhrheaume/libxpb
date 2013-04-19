@@ -24,8 +24,8 @@
 
 #include "xpb.h"
 
-#define DEFAULT_NRECT 20
-#define DEFAULT_PADDING 2
+#define DEFAULT_NRECT    20
+#define DEFAULT_PADDING   2
 #define DEFAULT_RECT_XSZ 12
 #define DEFAULT_RECT_YSZ 20
 
@@ -64,13 +64,13 @@ static uint8_t alloc_colors(struct xpb *bar,
 static void create_window(struct xpb *bar);
 
 __attribute__((always_inline))
-static inline uint16_t calc_xsize(rect_xsz, padding, nrect)
+static inline uint16_t calc_xsize(uint8_t rect_xsz, uint8_t padding, uint8_t nrect)
 {
 	return rect_xsz * nrect + padding * (nrect + 1) + 2;
 }
 
 __attribute__((always_inline))
-static inline uint16_t calc_ysize(rect_ysz, padding)
+static inline uint16_t calc_ysize(uint8_t rect_ysz, uint8_t padding)
 {
 	return rect_ysz + 2 * padding + 2;
 }
@@ -346,18 +346,18 @@ uint8_t xpb_cleanup(struct xpb *bar)
 const char *xpb_status_tostring(uint8_t status)
 {
 	static const char *strmap[XPB_STATUS_END] = {
-		"success", // SUCCESS
+		"success",                  // SUCCESS
 		"bad number of rectangles", // BAD_NRECT
-		"bad padding number", // BAD_PADDING
-		"bad rectangle x-size",
-		"bad rectangle y-size",
-		"bad x-position",
-		"bad y-position",
-		"bad foreground color",
-		"bad background color",
-		"out of memory",
-		"bar too large",
-		"bad pointer"
+		"bad padding number",       // BAD_PADDING
+		"bad rectangle x-size",     // BAD_XSZ
+		"bad rectangle y-size",     // BAD_YSZ
+		"bad x-position",           // BAD_XPOS
+		"bad y-position",           // BAD_YPOS
+		"bad foreground color",     // BAD_FG
+		"bad background color",     // BAD_BG
+		"out of memory",            // NOMEM
+		"bar too large",            // TOO_LARGE
+		"bad pointer"               // BAD_PTR
 	};
 
 	if (status >= XPB_STATUS_END) {
