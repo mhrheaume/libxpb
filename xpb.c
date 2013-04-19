@@ -345,50 +345,25 @@ uint8_t xpb_cleanup(struct xpb *bar)
 
 const char *xpb_status_tostring(uint8_t status)
 {
-	const char *str;
+	static const char *strmap[XPB_STATUS_END] = {
+		"success", // SUCCESS
+		"bad number of rectangles", // BAD_NRECT
+		"bad padding number", // BAD_PADDING
+		"bad rectangle x-size",
+		"bad rectangle y-size",
+		"bad x-position",
+		"bad y-position",
+		"bad foreground color",
+		"bad background color",
+		"out of memory",
+		"bar too large",
+		"bad pointer"
+	};
 
-	switch (status) {
-	case XPB_STATUS_SUCCESS:
-		str = "success";
-		break;
-	case XPB_STATUS_BAD_NRECT:
-		str = "bad number of rectangles";
-		break;
-	case XPB_STATUS_BAD_PADDING:
-		str = "bad padding number";
-		break;
-	case XPB_STATUS_BAD_XSZ:
-		str = "bad rectangle x size";
-		break;
-	case XPB_STATUS_BAD_YSZ:
-		str = "bad rectangle y size";
-		break;
-	case XPB_STATUS_BAD_XPOS:
-		str = "bad x position";
-		break;
-	case XPB_STATUS_BAD_YPOS:
-		str = "bad y position";
-		break;
-	case XPB_STATUS_BAD_FG:
-		str = "bad primary foreground color";
-		break;
-	case XPB_STATUS_BAD_BG:
-		str = "bad background color";
-		break;
-	case XPB_STATUS_NOMEM:
-		str = "out of memory";
-		break;
-	case XPB_STATUS_TOO_LARGE:
-		str = "bar too large";
-		break;
-	case XPB_STATUS_BAD_PTR:
-		str = "bad pointer";
-		break;
-	default:
-		str = "unknown status";
-		break;
+	if (status >= XPB_STATUS_END) {
+		return NULL;
 	}
 
-	return str;
+	return strmap[status];
 }
 

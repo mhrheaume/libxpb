@@ -33,6 +33,7 @@
 #define XPB_STATUS_NOMEM        9
 #define XPB_STATUS_TOO_LARGE   10
 #define XPB_STATUS_BAD_PTR     11
+#define XPB_STATUS_END         12 // Never returned, should always be last
 
 #define XPB_MASK_NRECT     0x0001
 #define XPB_MASK_PADDING   0x0002
