@@ -68,7 +68,7 @@ uint8_t xpb_init(uint16_t mask,
 	struct xpb **bar_out);
 
 uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max);
-void xpb_cleanup(struct xpb *bar);
+uint8_t xpb_cleanup(struct xpb *bar);
 
 const char *xpb_status_tostring(uint8_t status);
 

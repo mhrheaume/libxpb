@@ -324,15 +324,23 @@ uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
 	return XPB_STATUS_SUCCESS;
 }
 
-void xpb_cleanup(struct xpb *bar)
+uint8_t xpb_cleanup(struct xpb *bar)
 {
-	struct xpb_priv *priv = XPB_PRIV(bar);
+	struct xpb_priv *priv;
+
+	if (bar == NULL) {
+		return XPB_STATUS_BAD_PTR;
+	}
+
+	priv = XPB_PRIV(bar);
 
 	XDestroyWindow(bar->dpy, priv->win);
-	free(priv);
-
 	XCloseDisplay(bar->dpy);
+
+	free(priv);
 	free(bar);
+
+	return XPB_STATUS_SUCCESS;
 }
 
 const char *xpb_status_tostring(uint8_t status)
