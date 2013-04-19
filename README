@@ -1,0 +1,15 @@
+================================
+libxbp, (c) 2013 Matthew Rheaume
+================================
+
+A library for creating generic percentage bars for X.
+
+Requirements
+------------
+In order to build libxpb you need the Xlib header files.
+
+Installation
+------------
+Enter the following command to build and install libxpb (if necessary as root):
+
+	make clean install
