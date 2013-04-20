@@ -53,11 +53,11 @@ struct xpb_priv {
 	XColor bg;
 };
 
-static uint8_t set_dimensions(struct xpb *bar,
+static xpb_status_t set_dimensions(struct xpb *bar,
 	uint16_t mask,
 	struct xpb_attr *attr);
 
-static uint8_t alloc_colors(struct xpb *bar,
+static xpb_status_t alloc_colors(struct xpb *bar,
 	uint16_t mask,
 	struct xpb_attr *attr);
 
@@ -76,19 +76,19 @@ static inline uint16_t calc_ysize(uint8_t rect_ysz, uint8_t padding)
 }
 
 static inline
-float get_fill_percent(uint8_t brightness_percent, float lower, float upper)
+float get_fill_percent(unsigned int percent, float lower, float upper)
 {
 	return
-		brightness_percent >= upper ? 1.0 :
-		brightness_percent <= lower ? 0 :
-		(float)(brightness_percent - lower) / (float)(upper - lower);
+		percent >= upper ? 1.0 :
+		percent <= lower ? 0 :
+		(float)(percent - lower) / (float)(upper - lower);
 }
 
-uint8_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
+xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
 {
-	uint8_t screen = DefaultScreen(bar->dpy);
-	uint16_t screen_xsz = DisplayWidth(bar->dpy, screen);
-	uint16_t screen_ysz = DisplayHeight(bar->dpy, screen);
+	int screen = DefaultScreen(bar->dpy);
+	int screen_xsz = DisplayWidth(bar->dpy, screen);
+	int screen_ysz = DisplayHeight(bar->dpy, screen);
 
 	struct xpb_priv *priv = XPB_PRIV(bar);
 
@@ -148,11 +148,11 @@ uint8_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
 	return XPB_STATUS_SUCCESS;
 }
 
-uint8_t alloc_colors(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
+xpb_status_t alloc_colors(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
 {
 	Colormap cmap = DefaultColormap(bar->dpy, 0);
 	struct xpb_priv *priv = XPB_PRIV(bar);
-	uint8_t status;
+	xpb_status_t status;
 
 	status = XAllocNamedColor(bar->dpy,
 		cmap,
@@ -181,8 +181,8 @@ uint8_t alloc_colors(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
 void create_window(struct xpb *bar)
 {
 	XSetWindowAttributes wa;
-	uint32_t vmask;
-	uint8_t screen = DefaultScreen(bar->dpy);
+	unsigned long vmask;
+	int screen = DefaultScreen(bar->dpy);
 
 	struct xpb_priv *priv = XPB_PRIV(bar);
 
@@ -208,9 +208,9 @@ void create_window(struct xpb *bar)
 	priv->gc = XCreateGC(bar->dpy, priv->win, 0, NULL);
 }
 
-uint8_t xpb_init(uint16_t mask, struct xpb_attr *attr, struct xpb **bar_out)
+xpb_status_t xpb_init(uint16_t mask, struct xpb_attr *attr, struct xpb **bar_out)
 {
-	uint8_t status;
+	xpb_status_t status;
 	struct xpb *bar;
 	struct xpb_priv *priv;
 
@@ -260,11 +260,11 @@ error:
 	return status;
 }
 
-uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
+xpb_status_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
 {
-	uint8_t i;
-	uint16_t base_x_offset, base_y_offset;
-	uint16_t brightness_percent = current * 100 / max;
+	unsigned int i;
+	unsigned int base_x_offset, base_y_offset;
+	unsigned int brightness_percent = current * 100 / max;
 	struct xpb_priv *priv;
 
 	if (bar == NULL) {
@@ -297,8 +297,8 @@ uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
 	base_y_offset = 1 + priv->padding;
 
 	for (i = 0; i < priv->nrect; i++) {
-		uint16_t x_offset = base_x_offset + i * (priv->rect_xsz + priv->padding);
-		uint16_t y_offset = base_y_offset;
+		unsigned int x_offset = base_x_offset + i * (priv->rect_xsz + priv->padding);
+		unsigned int y_offset = base_y_offset;
 
 		float fill_percent = get_fill_percent(brightness_percent,
 			i * (100.0 / (float)priv->nrect),
@@ -324,7 +324,7 @@ uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
 	return XPB_STATUS_SUCCESS;
 }
 
-uint8_t xpb_cleanup(struct xpb *bar)
+xpb_status_t xpb_cleanup(struct xpb *bar)
 {
 	struct xpb_priv *priv;
 
@@ -343,7 +343,7 @@ uint8_t xpb_cleanup(struct xpb *bar)
 	return XPB_STATUS_SUCCESS;
 }
 
-const char *xpb_status_tostring(uint8_t status)
+const char *xpb_status_tostring(xpb_status_t status)
 {
 	static const char *strmap[XPB_STATUS_END] = {
 		"success",                  // SUCCESS

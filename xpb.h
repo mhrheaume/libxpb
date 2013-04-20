@@ -44,6 +44,8 @@
 #define XPB_MASK_FG        0x0040
 #define XPB_MASK_BG        0x0080
 
+typedef unsigned int xpb_status_t;
+
 struct xpb {
 	Display *dpy;
 	Window root;
@@ -64,13 +66,13 @@ struct xpb_attr {
 	char *bg;
 };
 
-uint8_t xpb_init(uint16_t mask,
+xpb_status_t xpb_init(uint16_t mask,
 	struct xpb_attr *attr,
 	struct xpb **bar_out);
 
-uint8_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max);
-uint8_t xpb_cleanup(struct xpb *bar);
+xpb_status_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max);
+xpb_status_t xpb_cleanup(struct xpb *bar);
 
-const char *xpb_status_tostring(uint8_t status);
+const char *xpb_status_tostring(xpb_status_t status);
 
 #endif // XPB_H
