@@ -7,7 +7,7 @@ OBJS = ${SRC:.c=.o}
 LIB = libxpb
 
 VERSION_MAJ = 0
-VERSION_MIN = 1
+VERSION_MIN = 2
 VERSION_REV = 0
 
 SONAME = ${LIB}.so.${VERSION_MAJ}
