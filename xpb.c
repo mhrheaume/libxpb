@@ -52,12 +52,12 @@ struct xpb_priv {
 	XColor bg;
 };
 
-static xpb_status_t set_dimensions(struct xpb *bar,
-	xpb_mask_t mask,
+static int set_dimensions(struct xpb *bar,
+	unsigned long mask,
 	struct xpb_attr *attr);
 
-static xpb_status_t alloc_colors(struct xpb *bar,
-	xpb_mask_t mask,
+static int alloc_colors(struct xpb *bar,
+	unsigned long mask,
 	struct xpb_attr *attr);
 
 static void create_window(struct xpb *bar);
@@ -83,7 +83,7 @@ float get_fill_percent(float percent, float lower, float upper)
 		(float)(percent - lower) / (float)(upper - lower);
 }
 
-xpb_status_t set_dimensions(struct xpb *bar, xpb_mask_t mask, struct xpb_attr *attr)
+int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 {
 	int screen = DefaultScreen(bar->dpy);
 	int screen_xsz = DisplayWidth(bar->dpy, screen);
@@ -147,11 +147,11 @@ xpb_status_t set_dimensions(struct xpb *bar, xpb_mask_t mask, struct xpb_attr *a
 	return XPB_STATUS_SUCCESS;
 }
 
-xpb_status_t alloc_colors(struct xpb *bar, xpb_mask_t mask, struct xpb_attr *attr)
+int alloc_colors(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 {
 	Colormap cmap = DefaultColormap(bar->dpy, 0);
 	struct xpb_priv *priv = XPB_PRIV(bar);
-	xpb_status_t status;
+	int status;
 
 	status = XAllocNamedColor(bar->dpy,
 		cmap,
@@ -207,9 +207,9 @@ void create_window(struct xpb *bar)
 	priv->gc = XCreateGC(bar->dpy, priv->win, 0, NULL);
 }
 
-xpb_status_t xpb_init(xpb_mask_t mask, struct xpb_attr *attr, struct xpb **bar_out)
+int xpb_init(unsigned long mask, struct xpb_attr *attr, struct xpb **bar_out)
 {
-	xpb_status_t status;
+	int status;
 	struct xpb *bar;
 	struct xpb_priv *priv;
 
@@ -259,7 +259,7 @@ error:
 	return status;
 }
 
-xpb_status_t xpb_draw(struct xpb *bar, int current, int max)
+int xpb_draw(struct xpb *bar, int current, int max)
 {
 	int i, base_x_offset, base_y_offset;
 	float percent;
@@ -329,7 +329,7 @@ xpb_status_t xpb_draw(struct xpb *bar, int current, int max)
 	return XPB_STATUS_SUCCESS;
 }
 
-xpb_status_t xpb_cleanup(struct xpb *bar)
+int xpb_cleanup(struct xpb *bar)
 {
 	struct xpb_priv *priv;
 
@@ -348,7 +348,7 @@ xpb_status_t xpb_cleanup(struct xpb *bar)
 	return XPB_STATUS_SUCCESS;
 }
 
-const char *xpb_status_tostring(xpb_status_t status)
+const char *xpb_status_tostring(int status)
 {
 	static const char *strmap[XPB_STATUS_END] = {
 		"success",                  // SUCCESS

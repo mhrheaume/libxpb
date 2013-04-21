@@ -19,6 +19,8 @@
 #ifndef XPB_H
 #define XPB_H
 
+#define XPB_SUCCESS(status) (status == XPB_STATUS_SUCCESS)
+
 #define XPB_STATUS_SUCCESS      0
 #define XPB_STATUS_BAD_NRECT    1
 #define XPB_STATUS_BAD_PADDING  2
@@ -33,8 +35,6 @@
 #define XPB_STATUS_BAD_PTR     11
 #define XPB_STATUS_END         12 // Never returned, should always be last
 
-#define XPB_SUCCESS(status) (status == XPB_STATUS_SUCCESS)
-
 #define XPB_MASK_NRECT     0x0001
 #define XPB_MASK_PADDING   0x0002
 #define XPB_MASK_RECT_XSZ  0x0004
@@ -43,9 +43,6 @@
 #define XPB_MASK_YPOS      0x0020
 #define XPB_MASK_FG        0x0040
 #define XPB_MASK_BG        0x0080
-
-typedef int xpb_status_t;
-typedef unsigned long xpb_mask_t;
 
 struct xpb {
 	Display *dpy;
@@ -67,13 +64,10 @@ struct xpb_attr {
 	char *bg;
 };
 
-xpb_status_t xpb_init(xpb_mask_t mask,
-	struct xpb_attr *attr,
-	struct xpb **bar_out);
+int xpb_init(unsigned long mask, struct xpb_attr *attr, struct xpb **bar_out);
+int xpb_draw(struct xpb *bar, int current, int max);
+int xpb_cleanup(struct xpb *bar);
 
-xpb_status_t xpb_draw(struct xpb *bar, int current, int max);
-xpb_status_t xpb_cleanup(struct xpb *bar);
-
-const char *xpb_status_tostring(xpb_status_t status);
+const char *xpb_status_tostring(int status);
 
 #endif // XPB_H
