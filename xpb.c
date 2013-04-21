@@ -17,7 +17,6 @@
  */
 
 #include <stdlib.h>
-#include <stdint.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -38,45 +37,45 @@ struct xpb_priv {
 	Window win;
 	GC gc;
 
-	uint8_t nrect;
-	uint8_t padding;
-	uint8_t rect_xsz;
-	uint8_t rect_ysz;
+	int nrect;
+	int padding;
+	int rect_xsz;
+	int rect_ysz;
 
-	uint16_t xpos;
-	uint16_t ypos;
+	int xpos;
+	int ypos;
 
-	uint16_t xsz;
-	uint16_t ysz;
+	int xsz;
+	int ysz;
 
 	XColor fg;
 	XColor bg;
 };
 
 static xpb_status_t set_dimensions(struct xpb *bar,
-	uint16_t mask,
+	xpb_mask_t mask,
 	struct xpb_attr *attr);
 
 static xpb_status_t alloc_colors(struct xpb *bar,
-	uint16_t mask,
+	xpb_mask_t mask,
 	struct xpb_attr *attr);
 
 static void create_window(struct xpb *bar);
 
 __attribute__((always_inline))
-static inline uint16_t calc_xsize(uint8_t rect_xsz, uint8_t padding, uint8_t nrect)
+static inline int calc_xsize(int rect_xsz, int padding, int nrect)
 {
 	return rect_xsz * nrect + padding * (nrect + 1) + 2;
 }
 
 __attribute__((always_inline))
-static inline uint16_t calc_ysize(uint8_t rect_ysz, uint8_t padding)
+static inline int calc_ysize(int rect_ysz, int padding)
 {
 	return rect_ysz + 2 * padding + 2;
 }
 
 static inline
-float get_fill_percent(unsigned int percent, float lower, float upper)
+float get_fill_percent(float percent, float lower, float upper)
 {
 	return
 		percent >= upper ? 1.0 :
@@ -84,7 +83,7 @@ float get_fill_percent(unsigned int percent, float lower, float upper)
 		(float)(percent - lower) / (float)(upper - lower);
 }
 
-xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
+xpb_status_t set_dimensions(struct xpb *bar, xpb_mask_t mask, struct xpb_attr *attr)
 {
 	int screen = DefaultScreen(bar->dpy);
 	int screen_xsz = DisplayWidth(bar->dpy, screen);
@@ -93,12 +92,12 @@ xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *att
 	struct xpb_priv *priv = XPB_PRIV(bar);
 
 	priv->nrect = mask & XPB_MASK_NRECT ? attr->nrect : DEFAULT_NRECT;
-	if (priv->nrect == 0) {
+	if (priv->nrect <= 0) {
 		return XPB_STATUS_BAD_NRECT;
 	}
 
 	priv->padding = mask & XPB_MASK_PADDING ? attr->padding : DEFAULT_PADDING;
-	if (priv->padding == 0) {
+	if (priv->padding <= 0) {
 		return XPB_STATUS_BAD_PADDING;
 	}
 
@@ -127,7 +126,7 @@ xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *att
 		attr->xpos :
 		screen_xsz / 2 - (priv->xsz / 2);
 
-	if (priv->xpos > screen_xsz) {
+	if (priv->xpos > screen_xsz || priv->xpos < 0) {
 		return XPB_STATUS_BAD_XPOS;
 	}
 
@@ -135,7 +134,7 @@ xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *att
 		attr->ypos :
 		screen_ysz * 15 / 16 - (priv->ysz / 2);
 
-	if (priv->ypos > screen_ysz) {
+	if (priv->ypos > screen_ysz || priv->ypos < 0) {
 		return XPB_STATUS_BAD_YPOS;
 	}
 
@@ -148,7 +147,7 @@ xpb_status_t set_dimensions(struct xpb *bar, uint16_t mask, struct xpb_attr *att
 	return XPB_STATUS_SUCCESS;
 }
 
-xpb_status_t alloc_colors(struct xpb *bar, uint16_t mask, struct xpb_attr *attr)
+xpb_status_t alloc_colors(struct xpb *bar, xpb_mask_t mask, struct xpb_attr *attr)
 {
 	Colormap cmap = DefaultColormap(bar->dpy, 0);
 	struct xpb_priv *priv = XPB_PRIV(bar);
@@ -208,7 +207,7 @@ void create_window(struct xpb *bar)
 	priv->gc = XCreateGC(bar->dpy, priv->win, 0, NULL);
 }
 
-xpb_status_t xpb_init(uint16_t mask, struct xpb_attr *attr, struct xpb **bar_out)
+xpb_status_t xpb_init(xpb_mask_t mask, struct xpb_attr *attr, struct xpb **bar_out)
 {
 	xpb_status_t status;
 	struct xpb *bar;
@@ -235,12 +234,12 @@ xpb_status_t xpb_init(uint16_t mask, struct xpb_attr *attr, struct xpb **bar_out
 	bar->root = RootWindow(bar->dpy, 0);
 
 	status = set_dimensions(bar, mask, attr);
-	if (status != XPB_STATUS_SUCCESS) {
+	if (!XPB_SUCCESS(status)) {
 		goto error;
 	}
 
 	status = alloc_colors(bar, mask, attr);
-	if (status != XPB_STATUS_SUCCESS) {
+	if (!XPB_SUCCESS(status)) {
 		goto error;
 	}
 
@@ -260,16 +259,21 @@ error:
 	return status;
 }
 
-xpb_status_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
+xpb_status_t xpb_draw(struct xpb *bar, int current, int max)
 {
-	unsigned int i;
-	unsigned int base_x_offset, base_y_offset;
-	unsigned int brightness_percent = current * 100 / max;
+	int i, base_x_offset, base_y_offset;
+	float percent;
 	struct xpb_priv *priv;
 
 	if (bar == NULL) {
 		return XPB_STATUS_BAD_PTR;
 	}
+
+	// The total percentage of the bar to be filled - between 0 and 100
+	percent =
+		current <= 0 ? 0 :
+		current >= max ? 100 :
+		current / max * 100;
 
 	priv = XPB_PRIV(bar);
 
@@ -297,10 +301,11 @@ xpb_status_t xpb_draw(struct xpb *bar, uint16_t current, uint16_t max)
 	base_y_offset = 1 + priv->padding;
 
 	for (i = 0; i < priv->nrect; i++) {
-		unsigned int x_offset = base_x_offset + i * (priv->rect_xsz + priv->padding);
-		unsigned int y_offset = base_y_offset;
+		int x_offset = base_x_offset + i * (priv->rect_xsz + priv->padding);
+		int y_offset = base_y_offset;
 
-		float fill_percent = get_fill_percent(brightness_percent,
+		// The percentage that the current rectangle should be filled
+		float fill_percent = get_fill_percent(percent,
 			i * (100.0 / (float)priv->nrect),
 			(i + 1) * (100.0 / (float)priv->nrect));
 
@@ -360,7 +365,7 @@ const char *xpb_status_tostring(xpb_status_t status)
 		"bad pointer"               // BAD_PTR
 	};
 
-	if (status >= XPB_STATUS_END) {
+	if (status >= XPB_STATUS_END || status < XPB_STATUS_SUCCESS) {
 		return NULL;
 	}
 
