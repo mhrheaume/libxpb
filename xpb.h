@@ -19,6 +19,8 @@
 #ifndef XPB_H
 #define XPB_H
 
+#include <X11/Xlib.h>
+
 #define XPB_SUCCESS(status) (status == XPB_STATUS_SUCCESS)
 
 #define XPB_STATUS_SUCCESS      0

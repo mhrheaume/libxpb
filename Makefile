@@ -8,12 +8,12 @@ LIB = libxpb
 
 VERSION_MAJ = 0
 VERSION_MIN = 2
-VERSION_REV = 0
 
-SONAME = ${LIB}.so.${VERSION_MAJ}
-LIBNAME = ${SONAME}.${VERSION_MIN}.${VERSION_REV}
+SONAME = ${LIB}.so
+SONAME_MAJ = ${SONAME}.${VERSION_MAJ}
+SONAME_FULL = ${SONAME_MAJ}.${VERSION_MIN}
 
-LIBFLAGS = -shared -Wl,-soname,${SONAME} -lX11
+LIBFLAGS = -shared -Wl,-soname,${SONAME_MAJ} -lX11
 
 INSTALL_PATH = /usr/local
 INSTALL_PATH_HDR = ${INSTALL_PATH}/include
@@ -23,7 +23,7 @@ INSTALL_PATH_LIB = ${INSTALL_PATH}/lib
 all: ${LIB}
 
 ${LIB}: ${OBJS}
-	${CC} ${LIBFLAGS} -o ${LIBNAME} ${OBJS} 
+	${CC} ${LIBFLAGS} -o ${SONAME_FULL} ${OBJS} 
 
 .PHONY: install
 install: all install_lib install_hdr
@@ -32,8 +32,10 @@ install: all install_lib install_hdr
 install_lib:
 	@echo Installing libxpb to ${INSTALL_PATH_LIB}
 	@mkdir -p ${INSTALL_PATH_LIB}
-	@cp -f ${LIBNAME} ${INSTALL_PATH_LIB}
-	@chmod 755 ${INSTALL_PATH_LIB}/${LIBNAME}
+	@cp -f ${SONAME_FULL} ${INSTALL_PATH_LIB}
+	@chmod 755 ${INSTALL_PATH_LIB}/${SONAME_FULL}
+	@ln -sf ${SONAME_FULL} ${INSTALL_PATH_LIB}/${SONAME_MAJ}
+	@ln -sf ${SONAME_FULL} ${INSTALL_PATH_LIB}/${SONAME}
 
 .PHONY: install_hdr
 install_hdr:
@@ -46,4 +48,4 @@ install_hdr:
 
 .PHONY: clean
 clean:
-	@rm -f ${LIBNAME} ${OBJS}
+	@rm -f ${SONAME_FULL} ${OBJS}
