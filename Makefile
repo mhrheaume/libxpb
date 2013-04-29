@@ -25,6 +25,10 @@ all: ${LIB}
 ${LIB}: ${OBJS}
 	${CC} ${LIBFLAGS} -o ${SONAME_FULL} ${OBJS} 
 
+.PHONY: debug
+debug: CFLAGS += -DDEBUG -g
+debug: ${LIB}
+
 .PHONY: install
 install: all install_lib install_hdr
 

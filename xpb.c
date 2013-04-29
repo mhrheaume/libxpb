@@ -17,11 +17,18 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
 #include "xpb.h"
+
+#ifdef DEBUG
+#define DEBUG_PRINTF(...) printf("libxpb: " __VA_ARGS__)
+#else
+#define DEBUG_PRINTF(...) do {} while (0)
+#endif
 
 #define DEFAULT_NRECT    20
 #define DEFAULT_PADDING   2
@@ -274,6 +281,8 @@ int xpb_draw(struct xpb *bar, int current, int max)
 		current <= 0 ? 0 :
 		current >= max ? 100 :
 		current / max * 100;
+
+	DEBUG_PRINTF("percent: %f (current=%d, max=%d)\n", percent, current, max);
 
 	priv = XPB_PRIV(bar);
 
