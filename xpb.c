@@ -280,7 +280,7 @@ int xpb_draw(struct xpb *bar, int current, int max)
 	percent =
 		current <= 0 ? 0 :
 		current >= max ? 100 :
-		current / max * 100;
+		(float)current / (float)max * 100;
 
 	DEBUG_PRINTF("percent: %f (current=%d, max=%d)\n", percent, current, max);
 
