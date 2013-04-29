@@ -81,6 +81,13 @@ static inline int calc_ysize(int rect_ysz, int padding)
 	return rect_ysz + 2 * padding + 2;
 }
 
+__attribute__((always_inline))
+static inline int is_bad_status(int status)
+{
+	return status < XPB_STATUS_SUCCESS || status > XPB_STATUS_BAD_PTR;
+}
+
+__attribute__((always_inline))
 static inline
 float get_fill_percent(float percent, float lower, float upper)
 {
@@ -359,7 +366,7 @@ int xpb_cleanup(struct xpb *bar)
 
 const char *xpb_status_tostring(int status)
 {
-	static const char *strmap[XPB_STATUS_END] = {
+	static const char *strmap[] = {
 		"success",                  // SUCCESS
 		"bad number of rectangles", // BAD_NRECT
 		"bad padding number",       // BAD_PADDING
@@ -374,7 +381,7 @@ const char *xpb_status_tostring(int status)
 		"bad pointer"               // BAD_PTR
 	};
 
-	if (status >= XPB_STATUS_END || status < XPB_STATUS_SUCCESS) {
+	if (is_bad_status(status)) {
 		return NULL;
 	}
 
