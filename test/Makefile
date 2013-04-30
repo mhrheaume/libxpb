@@ -13,7 +13,7 @@ EXEC = run_tests
 .PHONY: all
 all: ${EXEC}
 
-%.o:%.c
+%.o:%.c macro.h
 	${CC} ${CFLAGS} -c -o $@ $<
 
 ${EXEC}: ${OBJS}

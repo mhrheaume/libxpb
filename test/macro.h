@@ -16,28 +16,19 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <stdio.h>
+#ifndef MACRO_H
+#define MACRO_H
 
-#include "macro.h"
-#include "tests.h"
+#define TEST_SUCCESS 0
+#define TEST_FAIL    1
 
-int main(int argc, char **argv)
-{
-	int i, status;
-	struct test_unit *current_test;
+#define DECLARE_TEST(t) int test_##t()
 
-	struct test_unit test_list[NTESTS] = {
-		ADD_TEST(defaults),
-		ADD_TEST(top_left),
-	};
+#define ADD_TEST(t) { .name = #t, .run = test_##t }
 
-	for (i = 0; i < NTESTS; i++) {
-		current_test = &test_list[i];
+struct test_unit {
+	char *name;
+	int (*run)();
+};
 
-		printf("Running %s..", current_test->name);
-		status = (*(current_test->run))();
-		printf(status == TEST_SUCCESS ? "Pass\n" : "Fail\n");
-	}
-	
-	return 0;
-}
+#endif // MACRO_H

@@ -16,12 +16,14 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#define TEST_SUCCESS 0
-#define TEST_FAIL    1
+#ifndef TESTS_H
+#define TESTS_H
 
-#define DECLARE_TEST(t) int test_##t()
+#include "macro.h"
 
 #define NTESTS 2
 
 DECLARE_TEST(defaults);
 DECLARE_TEST(top_left);
+
+#endif // TESTS_H
