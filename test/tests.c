@@ -109,3 +109,33 @@ DECLARE_TEST(bigpads)
 
 	return run_fill_loop(mask, &attr);
 }
+
+DECLARE_TEST(squares)
+{
+	struct xpb_attr attr;
+	unsigned long mask = 0;
+
+	attr.rect_xsz = 20;
+	attr.rect_ysz = 20;
+
+	mask |= XPB_MASK_RECT_XSZ;
+	mask |= XPB_MASK_RECT_YSZ;
+
+	return run_fill_loop(mask, &attr);
+}
+
+DECLARE_TEST(manysquares)
+{
+	struct xpb_attr attr;
+	unsigned long mask = 0;
+
+	attr.rect_xsz = 10;
+	attr.rect_ysz = 10;
+	attr.nrect = 40;
+
+	mask |= XPB_MASK_RECT_XSZ;
+	mask |= XPB_MASK_RECT_YSZ;
+	mask |= XPB_MASK_NRECT;
+
+	return run_fill_loop(mask, &attr);
+}

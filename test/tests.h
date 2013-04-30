@@ -21,12 +21,14 @@
 
 #include "macro.h"
 
-#define NTESTS 5
+#define NTESTS 7
 
 DECLARE_TEST(defaults);
 DECLARE_TEST(top_left);
 DECLARE_TEST(green_fg);
 DECLARE_TEST(green_bg);
 DECLARE_TEST(bigpads);
+DECLARE_TEST(squares);
+DECLARE_TEST(manysquares);
 
 #endif // TESTS_H

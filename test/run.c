@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 		ADD_TEST(green_fg),
 		ADD_TEST(green_bg),
 		ADD_TEST(bigpads),
+		ADD_TEST(squares),
+		ADD_TEST(manysquares),
 	};
 
 	for (i = 0; i < NTESTS; i++) {
