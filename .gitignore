@@ -1,2 +1,3 @@
 libxpb.so*
 *.o
+test/run_tests

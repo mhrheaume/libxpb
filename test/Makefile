@@ -8,7 +8,7 @@ LDFLAGS = ${LIBS}
 
 SRC = $(wildcard *.c)
 OBJS = $(SRC:.c=.o)
-EXEC = test
+EXEC = run_tests
 
 .PHONY: all
 all: ${EXEC}
