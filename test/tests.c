@@ -51,7 +51,7 @@ DECLARE_TEST(defaults)
 	return TEST_SUCCESS;
 }
 
-DECLARE_TEST(top_right)
+DECLARE_TEST(top_left)
 {
 	int i, status;
 	struct xpb *bar = NULL;

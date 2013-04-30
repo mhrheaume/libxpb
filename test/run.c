@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
 	struct test_unit test_list[NTESTS] = {
 		ADD_TEST(defaults),
-		ADD_TEST(top_right)
+		ADD_TEST(top_left)
 	};
 
 	for (i = 0; i < NTESTS; i++) {

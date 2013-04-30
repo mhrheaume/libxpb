@@ -24,4 +24,4 @@
 #define NTESTS 2
 
 DECLARE_TEST(defaults);
-DECLARE_TEST(top_right);
+DECLARE_TEST(top_left);
