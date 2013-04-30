@@ -21,9 +21,10 @@
 
 #include "macro.h"
 
-#define NTESTS 2
+#define NTESTS 3
 
 DECLARE_TEST(defaults);
 DECLARE_TEST(top_left);
+DECLARE_TEST(green_fg);
 
 #endif // TESTS_H

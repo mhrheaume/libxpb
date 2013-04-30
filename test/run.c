@@ -29,12 +29,13 @@ int main(int argc, char **argv)
 	struct test_unit test_list[NTESTS] = {
 		ADD_TEST(defaults),
 		ADD_TEST(top_left),
+		ADD_TEST(green_fg),
 	};
 
 	for (i = 0; i < NTESTS; i++) {
 		current_test = &test_list[i];
 
-		printf("Running %s..", current_test->name);
+		printf("Running %s.. ", current_test->name);
 		status = (*(current_test->run))();
 		printf(status == TEST_SUCCESS ? "Pass\n" : "Fail\n");
 	}
