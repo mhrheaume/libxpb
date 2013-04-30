@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 		ADD_TEST(defaults),
 		ADD_TEST(top_left),
 		ADD_TEST(green_fg),
+		ADD_TEST(green_bg),
 	};
 
 	for (i = 0; i < NTESTS; i++) {

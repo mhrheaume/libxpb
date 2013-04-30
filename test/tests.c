@@ -122,3 +122,39 @@ DECLARE_TEST(green_fg)
 
 	return TEST_SUCCESS;
 }
+
+DECLARE_TEST(green_bg)
+{
+	int i, status;
+	struct xpb *bar = NULL;
+	struct xpb_attr attr;
+	unsigned long mask = 0;
+
+	attr.fg = "#000000";
+	attr.bg = "#00ff00";
+
+	mask |= XPB_MASK_FG;
+	mask |= XPB_MASK_BG;
+
+	status = xpb_init(mask, &attr, &bar);
+	if (!XPB_SUCCESS(status)) {
+		return TEST_FAIL;
+	}
+
+	for (i = 0; i <= 4; i++) {
+		status = xpb_draw(bar, i, 4);
+		if (!XPB_SUCCESS(status)) {
+			return TEST_FAIL;
+		}
+
+		XFlush(bar->dpy);
+		sleep(1);
+	}
+
+	status = xpb_cleanup(bar);
+	if (!XPB_SUCCESS(status)) {
+		return TEST_FAIL;
+	}
+
+	return TEST_SUCCESS;
+}
