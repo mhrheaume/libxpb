@@ -23,12 +23,12 @@
 
 #include "tests.h"
 
-DECLARE_TEST(defaults)
+static int run_fill_loop(unsigned long mask, struct xpb_attr *attr)
 {
 	int i, status;
 	struct xpb *bar = NULL;
 
-	status = xpb_init(0, NULL, &bar);
+	status = xpb_init(mask, attr, &bar);
 	if (!XPB_SUCCESS(status)) {
 		return TEST_FAIL;
 	}
@@ -36,6 +36,7 @@ DECLARE_TEST(defaults)
 	for (i = 0; i <= 4; i++) {
 		status = xpb_draw(bar, i, 4);
 		if (!XPB_SUCCESS(status)) {
+			xpb_cleanup(bar);
 			return TEST_FAIL;
 		}
 
@@ -51,10 +52,13 @@ DECLARE_TEST(defaults)
 	return TEST_SUCCESS;
 }
 
+DECLARE_TEST(defaults)
+{
+	return run_fill_loop(0, NULL);
+}
+
 DECLARE_TEST(top_left)
 {
-	int i, status;
-	struct xpb *bar = NULL;
 	struct xpb_attr attr;
 	unsigned long mask = 0;
 
@@ -64,33 +68,11 @@ DECLARE_TEST(top_left)
 	mask |= XPB_MASK_XPOS;
 	mask |= XPB_MASK_YPOS;
 
-	status = xpb_init(mask, &attr, &bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	for (i = 0; i <= 4; i++) {
-		status = xpb_draw(bar, i, 4);
-		if (!XPB_SUCCESS(status)) {
-			return TEST_FAIL;
-		}
-
-		XFlush(bar->dpy);
-		sleep(1);
-	}
-
-	status = xpb_cleanup(bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	return TEST_SUCCESS;
+	return run_fill_loop(mask, &attr);
 }
 
 DECLARE_TEST(green_fg)
 {
-	int i, status;
-	struct xpb *bar = NULL;
 	struct xpb_attr attr;
 	unsigned long mask = 0;
 
@@ -100,33 +82,11 @@ DECLARE_TEST(green_fg)
 	mask |= XPB_MASK_FG;
 	mask |= XPB_MASK_BG;
 
-	status = xpb_init(mask, &attr, &bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	for (i = 0; i <= 4; i++) {
-		status = xpb_draw(bar, i, 4);
-		if (!XPB_SUCCESS(status)) {
-			return TEST_FAIL;
-		}
-
-		XFlush(bar->dpy);
-		sleep(1);
-	}
-
-	status = xpb_cleanup(bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	return TEST_SUCCESS;
+	return run_fill_loop(mask, &attr);
 }
 
 DECLARE_TEST(green_bg)
 {
-	int i, status;
-	struct xpb *bar = NULL;
 	struct xpb_attr attr;
 	unsigned long mask = 0;
 
@@ -136,25 +96,5 @@ DECLARE_TEST(green_bg)
 	mask |= XPB_MASK_FG;
 	mask |= XPB_MASK_BG;
 
-	status = xpb_init(mask, &attr, &bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	for (i = 0; i <= 4; i++) {
-		status = xpb_draw(bar, i, 4);
-		if (!XPB_SUCCESS(status)) {
-			return TEST_FAIL;
-		}
-
-		XFlush(bar->dpy);
-		sleep(1);
-	}
-
-	status = xpb_cleanup(bar);
-	if (!XPB_SUCCESS(status)) {
-		return TEST_FAIL;
-	}
-
-	return TEST_SUCCESS;
+	return run_fill_loop(mask, &attr);
 }
