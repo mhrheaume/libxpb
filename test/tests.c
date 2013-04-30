@@ -98,3 +98,14 @@ DECLARE_TEST(green_bg)
 
 	return run_fill_loop(mask, &attr);
 }
+
+DECLARE_TEST(bigpads)
+{
+	struct xpb_attr attr;
+	unsigned long mask = 0;
+
+	attr.padding = 6;
+	mask |= XPB_MASK_PADDING;
+
+	return run_fill_loop(mask, &attr);
+}
