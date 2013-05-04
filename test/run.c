@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 		ADD_TEST(bigpads),
 		ADD_TEST(squares),
 		ADD_TEST(manysquares),
+		ADD_TEST(badpointers),
 	};
 
 	for (i = 0; i < NTESTS; i++) {

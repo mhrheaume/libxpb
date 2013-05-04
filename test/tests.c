@@ -139,3 +139,25 @@ DECLARE_TEST(manysquares)
 
 	return run_fill_loop(mask, &attr);
 }
+
+DECLARE_TEST(badpointers)
+{
+	int status;
+
+	status = xpb_init(0, NULL, NULL);
+	if (status != XPB_STATUS_BAD_PTR) {
+		return TEST_FAIL;
+	}
+
+	status = xpb_draw(NULL, 0, 0);
+	if (status != XPB_STATUS_BAD_PTR) {
+		return TEST_FAIL;
+	}
+
+	status = xpb_cleanup(NULL);
+	if (status != XPB_STATUS_BAD_PTR) {
+		return TEST_FAIL;
+	}
+
+	return TEST_SUCCESS;
+}
