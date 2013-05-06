@@ -21,7 +21,7 @@
 
 #include "macro.h"
 
-#define NTESTS 8
+#define NTESTS 9
 
 DECLARE_TEST(defaults);
 DECLARE_TEST(top_left);
@@ -31,5 +31,6 @@ DECLARE_TEST(bigpads);
 DECLARE_TEST(squares);
 DECLARE_TEST(manysquares);
 DECLARE_TEST(badpointers);
+DECLARE_TEST(badvals);
 
 #endif // TESTS_H

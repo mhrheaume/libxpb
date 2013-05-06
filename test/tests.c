@@ -25,17 +25,15 @@
 
 static int run_fill_loop(unsigned long mask, struct xpb_attr *attr)
 {
-	int i, status;
+	int i;
 	struct xpb *bar = NULL;
 
-	status = xpb_init(mask, attr, &bar);
-	if (!XPB_SUCCESS(status)) {
+	if (!XPB_SUCCESS(xpb_init(mask, attr, &bar))) {
 		return TEST_FAIL;
 	}
 
 	for (i = 0; i <= 4; i++) {
-		status = xpb_draw(bar, i, 4);
-		if (!XPB_SUCCESS(status)) {
+		if (!XPB_SUCCESS(xpb_draw(bar, i, 4))) {
 			xpb_cleanup(bar);
 			return TEST_FAIL;
 		}
@@ -44,8 +42,7 @@ static int run_fill_loop(unsigned long mask, struct xpb_attr *attr)
 		sleep(1);
 	}
 
-	status = xpb_cleanup(bar);
-	if (!XPB_SUCCESS(status)) {
+	if (!XPB_SUCCESS(xpb_cleanup(bar))) {
 		return TEST_FAIL;
 	}
 
@@ -161,3 +158,58 @@ DECLARE_TEST(badpointers)
 
 	return TEST_SUCCESS;
 }
+
+DECLARE_TEST(badvals)
+{
+	struct xpb_attr attr;
+	struct xpb *bar;
+	unsigned long mask = 0;
+
+	// Bad number of rectangles
+	attr.nrect = -1;
+	mask = XPB_MASK_NRECT;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_NRECT) {
+		return TEST_FAIL;
+	}
+
+	// Bad padding value
+	attr.padding = -1;
+	mask = XPB_MASK_PADDING;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_PADDING) {
+		return TEST_FAIL;
+	}
+
+	attr.rect_xsz = -1;
+	mask = XPB_MASK_RECT_XSZ;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_XSZ) {
+		return TEST_FAIL;
+	}
+
+	attr.rect_ysz = -1;
+	mask = XPB_MASK_RECT_YSZ;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_YSZ) {
+		return TEST_FAIL;
+	}
+
+	attr.xpos = -1;
+	mask = XPB_MASK_XPOS;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_XPOS) {
+		return TEST_FAIL;
+	}
+
+	attr.ypos = -1;
+	mask = XPB_MASK_YPOS;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_BAD_YPOS) {
+		return TEST_FAIL;
+	}
+
+	return TEST_SUCCESS;
+}
+
+
