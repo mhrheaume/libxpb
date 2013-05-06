@@ -31,11 +31,11 @@ int main(int argc, char **argv)
 		ADD_TEST(top_left),
 		ADD_TEST(green_fg),
 		ADD_TEST(green_bg),
-		ADD_TEST(bigpads),
+		ADD_TEST(big_pads),
 		ADD_TEST(squares),
-		ADD_TEST(manysquares),
-		ADD_TEST(badpointers),
-		ADD_TEST(badvals)
+		ADD_TEST(many_squares),
+		ADD_TEST(bad_pointers),
+		ADD_TEST(bad_vals),
 	};
 
 	for (i = 0; i < NTESTS; i++) {

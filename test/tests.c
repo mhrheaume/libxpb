@@ -96,7 +96,7 @@ DECLARE_TEST(green_bg)
 	return run_fill_loop(mask, &attr);
 }
 
-DECLARE_TEST(bigpads)
+DECLARE_TEST(big_pads)
 {
 	struct xpb_attr attr;
 	unsigned long mask = 0;
@@ -121,7 +121,7 @@ DECLARE_TEST(squares)
 	return run_fill_loop(mask, &attr);
 }
 
-DECLARE_TEST(manysquares)
+DECLARE_TEST(many_squares)
 {
 	struct xpb_attr attr;
 	unsigned long mask = 0;
@@ -137,7 +137,7 @@ DECLARE_TEST(manysquares)
 	return run_fill_loop(mask, &attr);
 }
 
-DECLARE_TEST(badpointers)
+DECLARE_TEST(bad_pointers)
 {
 	int status;
 
@@ -159,11 +159,11 @@ DECLARE_TEST(badpointers)
 	return TEST_SUCCESS;
 }
 
-DECLARE_TEST(badvals)
+DECLARE_TEST(bad_vals)
 {
 	struct xpb_attr attr;
 	struct xpb *bar;
-	unsigned long mask = 0;
+	unsigned long mask;
 
 	// Bad number of rectangles
 	attr.nrect = -1;
@@ -211,5 +211,4 @@ DECLARE_TEST(badvals)
 
 	return TEST_SUCCESS;
 }
-
 

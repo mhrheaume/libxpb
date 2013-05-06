@@ -27,10 +27,10 @@ DECLARE_TEST(defaults);
 DECLARE_TEST(top_left);
 DECLARE_TEST(green_fg);
 DECLARE_TEST(green_bg);
-DECLARE_TEST(bigpads);
+DECLARE_TEST(big_pads);
 DECLARE_TEST(squares);
-DECLARE_TEST(manysquares);
-DECLARE_TEST(badpointers);
-DECLARE_TEST(badvals);
+DECLARE_TEST(many_squares);
+DECLARE_TEST(bad_pointers);
+DECLARE_TEST(bad_vals);
 
 #endif // TESTS_H
