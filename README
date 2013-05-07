@@ -13,3 +13,97 @@ Installation
 Enter the following command to build and install libxpb (if necessary as root):
 
 	make clean install
+
+API Reference
+-------------
+
+xpb_init
+--------
+
+int xpb_init(unsigned long mask, struct xpb_attr *attr, struct xpb **bar_out)
+
+Initialize a new xpb struct.
+
+	Parameters
+	----------
+
+	mask:
+		Attribute bitmask. The attribute should be masked if the corresponding
+		value in the attribute structure has been set.
+
+	attr:
+		Attribute structure. Used to specify certain bar attributes.
+
+	bar:
+		Pointer to an xpb pointer. The xpb pointer will point to the new bar
+		after initialization.
+
+	Return Value
+	------------
+
+	Will return XPB_STATUS_SUCCESS if successful, an error code otherwise.
+
+xpb_draw
+--------
+
+int xpb_draw(struct xpb *bar, int current, int max)
+
+Draw the bar to the screen. This function does not flush the output buffer.
+
+	Parameters
+	----------
+
+	bar:
+		Pointer to an initialized xpb struct.
+
+	current:
+		An integer representing how much of the bar should be filled, ie. the
+		numerator of the fraction.
+
+	max:
+		The max value of current, such that the percentage of the bar filled is
+		max/current.
+
+	Return Value
+	------------
+
+	Will return XPB_STATUS_SUCCESS if success, XPB_STATUS_BAD_PTR if bar is not
+	an initialized xpb struct.
+
+xpb_cleanup
+-----------
+
+int xpb_cleanup(struct xpb *bar)
+
+Cleanup a previously allocated xpb struct.
+
+	Parameters
+	----------
+
+	bar:
+		Pointer to an initialized xpb struct.
+
+	Return Value
+	------------
+
+	Will return XPB_STATUS_SUCCESS if success, XPB_STATUS_BAD_PTR if bar is not
+	an initialized xpb struct.
+
+xpb_status_tostring
+-------------------
+
+const char *xpb_status_tostring(int status)
+
+Returns a string representing the status code.
+
+	Parameters
+	----------
+
+	status:
+		A valid status code returned by another API function.
+
+	Return Value
+	------------
+
+	Will return a string representing the status if the status code is valid,
+	NULL otherwise.
