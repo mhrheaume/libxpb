@@ -110,10 +110,14 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 		return XPB_STATUS_BAD_NRECT;
 	}
 
+	DEBUG_PRINTF("nrect=%d\n", priv->nrect);
+
 	priv->padding = mask & XPB_MASK_PADDING ? attr->padding : DEFAULT_PADDING;
 	if (priv->padding <= 0) {
 		return XPB_STATUS_BAD_PADDING;
 	}
+
+	DEBUG_PRINTF("padding=%d\n", priv->padding);
 
 	priv->rect_xsz = mask & XPB_MASK_RECT_XSZ ?
 		attr->rect_xsz :
@@ -124,6 +128,8 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 		return XPB_STATUS_BAD_XSZ;
 	}
 
+	DEBUG_PRINTF("rect_xsz=%d\n", priv->rect_xsz);
+
 	priv->rect_ysz = mask & XPB_MASK_RECT_YSZ ?
 		attr->rect_ysz :
 		DEFAULT_RECT_YSZ;
@@ -133,8 +139,13 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 		return XPB_STATUS_BAD_YSZ;
 	}
 
+	DEBUG_PRINTF("rect_ysz=%d\n", priv->rect_ysz);
+
 	priv->xsz = calc_xsize(priv->rect_xsz, priv->padding, priv->nrect);
 	priv->ysz = calc_ysize(priv->rect_ysz, priv->padding);
+
+	DEBUG_PRINTF("xsz=%d\n", priv->xsz);
+	DEBUG_PRINTF("ysz=%d\n", priv->ysz);
 
 	priv->xpos = mask & XPB_MASK_XPOS ?
 		attr->xpos :
@@ -144,6 +155,8 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 		return XPB_STATUS_BAD_XPOS;
 	}
 
+	DEBUG_PRINTF("xpos=%d\n", priv->xpos);
+
 	priv->ypos = mask & XPB_MASK_YPOS ?
 		attr->ypos :
 		screen_ysz * 15 / 16 - (priv->ysz / 2);
@@ -152,11 +165,16 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 		return XPB_STATUS_BAD_YPOS;
 	}
 
+	DEBUG_PRINTF("ypos=%d\n", priv->ypos);
+
 	// Throw an error if the bar goes offscreen
 	if ((priv->xpos + priv->xsz) > screen_xsz ||
 		(priv->ypos + priv->ysz) > screen_ysz) {
 		return XPB_STATUS_TOO_LARGE;
 	}
+
+	DEBUG_PRINTF("x: bar_end=%d, screen_end=%d\n", priv->xpos + priv->xsz, screen_xsz);
+	DEBUG_PRINTF("y: bar_end=%d, screen_end=%d\n", priv->ypos + priv->ysz, screen_ysz);
 
 	return XPB_STATUS_SUCCESS;
 }
