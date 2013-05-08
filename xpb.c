@@ -144,6 +144,10 @@ int set_dimensions(struct xpb *bar, unsigned long mask, struct xpb_attr *attr)
 	priv->xsz = calc_xsize(priv->rect_xsz, priv->padding, priv->nrect);
 	priv->ysz = calc_ysize(priv->rect_ysz, priv->padding);
 
+	if (priv->xsz > screen_xsz || priv->ysz > screen_ysz) {
+		return XPB_STATUS_TOO_LARGE;
+	}
+
 	DEBUG_PRINTF("xsz=%d\n", priv->xsz);
 	DEBUG_PRINTF("ysz=%d\n", priv->ysz);
 
