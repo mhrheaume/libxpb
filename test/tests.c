@@ -212,3 +212,34 @@ DECLARE_TEST(bad_vals)
 	return TEST_SUCCESS;
 }
 
+DECLARE_TEST(too_large)
+{
+	struct xpb_attr attr;
+	struct xpb *bar;
+	unsigned long mask;
+
+	attr.nrect = 1000;
+	attr.rect_xsz = 2000;
+	attr.xpos = 0;
+
+	mask = XPB_MASK_NRECT;
+	mask |= XPB_MASK_RECT_XSZ;
+	mask |= XPB_MASK_XPOS;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_TOO_LARGE) {
+		return TEST_FAIL;
+	}
+
+	attr.rect_ysz = 20000;
+	attr.ypos = 0;
+
+	mask = XPB_MASK_RECT_YSZ;
+	mask |= XPB_MASK_YPOS;
+
+	if (xpb_init(mask, &attr, &bar) != XPB_STATUS_TOO_LARGE) {
+		return TEST_FAIL;
+	}
+
+	return TEST_SUCCESS;
+}
+

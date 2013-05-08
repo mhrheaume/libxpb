@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 		ADD_TEST(many_squares),
 		ADD_TEST(bad_pointers),
 		ADD_TEST(bad_vals),
+		ADD_TEST(too_large)
 	};
 
 	for (i = 0; i < NTESTS; i++) {
