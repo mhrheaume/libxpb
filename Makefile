@@ -29,6 +29,10 @@ ${LIB}: ${OBJS}
 debug: CFLAGS += -DDEBUG -g
 debug: ${LIB}
 
+.PHONY: test
+test: all
+	$(MAKE) -C test
+
 .PHONY: install
 install: all install_lib install_hdr
 
